@@ -1,5 +1,8 @@
 
 # Example using the stock market as a way to make predictions
+# This is an initial attempt at making and using ML to predict
+# stocks. This could be further refined using different features
+# or a more robust data set.
 
 import quandl
 import math
@@ -15,7 +18,8 @@ import datetime
 style.use('ggplot')
 
 # This is a creation of features, data set, to use to find the
-# predicted stock price
+# predicted stock price.
+
 df = quandl.get("WIKI/AAPL")
 df = df[['Adj. Open',  'Adj. High',  'Adj. Low',  'Adj. Close', 'Adj. Volume']]
 df['HL_PCT'] = (df['Adj. High'] - df['Adj. Low']) / df['Adj. Close'] * 100.0
@@ -45,8 +49,11 @@ df.dropna(inplace=True)
 y = np.array(df['label'])
 
 # Training the model
-# Using a different set of data as training on the same
-# data will not yield good results for accuracy.
+# Cross validation is an essential way to train the model.
+# Cross validation is similar to taking a practice test
+# prior to taking the real test. It also will help the model
+# generalize on new data. This is critical to prevent over
+# or underfitting.
 
 X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.2)
 
@@ -56,7 +63,7 @@ X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_
 # Also keep in mind that in the LinearRegression() you can
 # multi thread the number of jobs using n_jobs. This can
 # make the algo faster or slower depending.
-# This can make the process much faster
+
 clf = LinearRegression(n_jobs=-1)
 clf.fit(X_train, y_train)
 confidence = clf.score(X_test, y_test)
